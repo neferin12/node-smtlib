@@ -1,24 +1,32 @@
 {
   "name": "@neferin/smtlib",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "A Javascript wrapper with a Z3-ish API for SMT-LIB 2.0, the language of Satisfiability Modulo Theories solvers",
   "author": "Giovanni Campagna <gcampagn@cs.stanford.edu>",
   "repository": "https://github.com/stanford-oval/node-smtlib",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "lib"
+  ],
   "dependencies": {
     "@types/byline": "^4.2.32",
     "byline": "^5.0.0"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@saithodev/semantic-release-backmerge": "^2.1.2",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
     "@types/node": "^16.4.10",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "coveralls": "^3.1.0",
     "eslint": "^7.2.0",
     "nyc": "^15.0.0",
+    "semantic-release": "^19.0.2",
     "source-map-support": "^0.5.19",
     "ts-node": "^10.0.0",
     "typedoc": "^0.22.4",
@@ -30,7 +38,8 @@
     "test": "nyc ts-node ./test/test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "prepare": "npm run build",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "semantic-release": "semantic-release"
   },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript"
