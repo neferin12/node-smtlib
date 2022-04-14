@@ -24,6 +24,14 @@ module.exports = {
                     'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
             },
         ],
+        [
+            "@saithodev/semantic-release-backmerge",
+            {
+                branches: [{from: "master", to: "develop"}],
+                clearWorkspace: true,
+                restoreWorkspace: true
+            }
+        ],
     ],
     preset: 'angular',
 };
