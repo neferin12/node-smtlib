@@ -6,6 +6,11 @@
 
 import * as smt from './smtlib';
 
+export type SatResult = {
+    satisfieable: boolean,
+    model: Record<string,number|boolean>|undefined
+}
+
 export default class BaseSmtSolver {
     private _statements : smt.SNode[];
     withAssignments : boolean;
@@ -37,7 +42,7 @@ export default class BaseSmtSolver {
         this._statements.forEach(callback);
     }
 
-    async checkSat() : Promise<[boolean, Record<string, number | boolean> | undefined]> {
+    checkSat() : Promise<SatResult> {
         throw new Error('checkSat not implemented for this solver');
     }
 

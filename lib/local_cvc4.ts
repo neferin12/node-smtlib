@@ -8,7 +8,9 @@ import * as child_process from 'child_process';
 import byline from 'byline';
 
 import * as smt from './smtlib';
-import BaseSolver from './base_solver';
+import BaseSolver, {SatResult} from './base_solver';
+import {SExpr} from "./smtlib";
+
 
 export default class LocalCVC4Solver extends BaseSolver {
     constructor(logic : string) {
@@ -17,15 +19,16 @@ export default class LocalCVC4Solver extends BaseSolver {
         this.setOption('strings-guess-model');
     }
 
-    checkSat() : Promise<[boolean, Record<string,number|boolean>|undefined]> {
+    checkSat() : Promise<SatResult> {
         return new Promise((callback, errback) => {
             this.add(smt.CheckSat());
+            this.add(new SExpr("get-model"))
 
             const args = ['--lang', 'smt2.6', '--tlimit=' + this.timeLimit, '--cpu-time'];
             if (this.withAssignments)
                 args.push('--dump-models');
 
-            const now = new Date;
+            // const now = new Date;
             const child = child_process.spawn('cvc4', args);
 
             child.stdin.setDefaultEncoding('utf8');
@@ -43,7 +46,7 @@ export default class LocalCVC4Solver extends BaseSolver {
             let cidx = 0;
             const constants : Record<string,number> = {};
             stdout.on('data', (line : string) => {
-                //console.log('SMT:', line);
+                // console.log('SMT:', line);
                 if (line === 'sat') {
                     sat = true;
                     return;
@@ -84,12 +87,12 @@ export default class LocalCVC4Solver extends BaseSolver {
                 // ignore everything else
             });
             stdout.on('end', () => {
-                console.log('SMT elapsed time: ' + ((new Date).getTime() - now.getTime()));
+                // console.log('SMT elapsed time: ' + ((new Date).getTime() - now.getTime()));
 
                 if (sat)
-                    callback([true, assignment]);
+                    callback({satisfieable: true, model: assignment});
                 else
-                    callback([false, undefined]);
+                    callback({satisfieable: false, model: undefined});
             });
 
             child.stdout.on('error', errback);
